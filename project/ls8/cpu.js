@@ -160,7 +160,6 @@ class CPU {
     }
 
     getFlag(flag) {
-        // console.log((this.reg.FL & (1 << flag)) >> flag);
         return (this.reg.FL & (1 << flag)) >> flag;
     }
 
@@ -247,8 +246,12 @@ class CPU {
         const newPC = handler.call(this, operandA, operandB);
 
         // Increment the PC register to go to the next instruction
-        const count = (this.reg.IR >> 6) & 0b00000011;
-        this.reg.PC += (count + 1);
+        if (newPC !== undefined) {
+            this.reg.PC = newPC;
+        } else {
+            const count = (this.reg.IR >> 6) & 0b00000011;
+            this.reg.PC += (count + 1);
+        }
 
     }
 
@@ -382,10 +385,8 @@ class CPU {
             return this.reg[reg];
     }
     JNE(reg) {
-        if (!this.getFlag(FL_EQ)) {
-            console.log('JNE');
+        if (!this.getFlag(FL_EQ))
             return this.reg[reg];
-        }
     }
 
 }
