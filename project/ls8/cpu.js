@@ -37,6 +37,12 @@ const RET  = 0b00001001;
 
 const CMP = 0b10100000;
 
+const JMP = 0b01010000;
+const JEQ = 0b01010001;
+const JGT = 0b01010100;
+const JLT = 0b01010011;
+const JNE = 0b01010010;
+
 // Flags
 const FL_EQ = 0;
 const FL_GT = 1;
@@ -99,6 +105,12 @@ class CPU {
         bt[RET]  = this.RET;
 
         bt[CMP] = this.CMP;
+
+        bt[JMP] = this.JMP;
+        bt[JEQ] = this.JEQ;
+        bt[JGT] = this.JGT;
+        bt[JLT] = this.JLT;
+        bt[JNE] = this.JNE;
 
         this.branchTable = bt;
     }
@@ -334,6 +346,28 @@ class CPU {
 
     CMP(regA, regB) {
         this.alu('CMP', regA, regB);
+    }
+
+    JMP(reg) {
+        return this.reg[reg];
+    }
+    JEQ(reg) {
+        if (this.getFlag(FL_EQ))
+            return this.reg[reg];
+    }
+    JGT(reg) {
+        if (this.getFlag(FL_GT))
+            return this.reg[reg];
+    }
+    JLT(reg) {
+        if (this.getFlag(FL_LT))
+            return this.reg[reg];
+    }
+    JNE(reg) {
+        if (!this.getFlag(FL_EQ)) {
+            console.log('JNE');
+            return this.reg[reg];
+        }
     }
 
 }
