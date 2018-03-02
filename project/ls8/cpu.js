@@ -28,6 +28,9 @@ const NOT = 0b01110000;
 const PUSH = 0b01001101;
 const POP  = 0b01001100;
 
+const CALL = 0b01001000;
+const RET  = 0b00001001;
+
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -80,6 +83,9 @@ class CPU {
 
         bt[PUSH] = this.PUSH;
         bt[POP]  = this.POP;
+
+        bt[CALL] = this.CALL;
+        bt[RET]  = this.RET;
 
         this.branchTable = bt;
     }
@@ -273,6 +279,17 @@ class CPU {
     }
     POP(reg) {
         this.reg[reg] = this._pop();
+    }
+
+    CALL(reg) {
+        this._push(this.reg.PC + 2);
+        const addr = this.reg[reg];
+        return addr;
+    }
+    
+    RET() {
+        const value = this._pop();
+        return value
     }
 
 }
