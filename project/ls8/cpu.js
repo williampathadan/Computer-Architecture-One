@@ -20,6 +20,11 @@ const MOD = 0b10101100;
 const INC = 0b01111000;
 const DEC = 0b01111001;
 
+const AND = 0b10110011;
+const OR  = 0b10110001;
+const XOR = 0b10110010;
+const NOT = 0b01110000;
+
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -64,6 +69,11 @@ class CPU {
 
         bt[INC] = this.INC;
         bt[DEC] = this.DEC;
+
+        bt[AND] = this.AND;
+        bt[OR]  = this.OR;
+        bt[XOR] = this.XOR;
+        bt[NOT] = this.NOT;
 
         this.branchTable = bt;
     }
@@ -120,6 +130,19 @@ class CPU {
                 break;
             case 'DEC':
                 this.reg[regA] = (this.reg[regA] - 1) & 255;
+                break;
+            
+            case 'AND':
+                this.reg[regA] = this.reg[regA] & this.reg[regB];
+                break;
+            case 'OR':
+                this.reg[regA] = this.reg[regA] | this.reg[regB];
+                break;
+            case 'XOR':
+                this.reg[regA] = this.reg[regA] ^ this.reg[regB];
+                break;
+            case 'NOT':
+                this.reg[regA] = (~this.reg[regA]);
                 break;
         }
     }
@@ -211,6 +234,22 @@ class CPU {
     
     DEC(reg) {
         this.alu('DEC', reg);
+    }
+
+    AND(regA, regB) {
+        this.alu('AND', regA, regB);
+    }
+    
+    OR(regA, regB) {
+        this.alu('OR', regA, regB);
+    }
+    
+    XOR(regA, regB) {
+        this.alu('XOR', regA, regB);
+    }
+    
+    NOT(reg) {
+        this.alu('NOT', reg);
     }
 
 }
