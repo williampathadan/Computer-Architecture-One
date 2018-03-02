@@ -12,6 +12,7 @@ const LDI = 0b10011001;
 const PRN = 0b01000011;
 
 const ADD = 0b10101000;
+const SUB = 0b10101001;
 const MUL = 0b10101010;
 
 /**
@@ -51,6 +52,7 @@ class CPU {
         bt[PRN] = this.PRN;
 
         bt[ADD] = this.ADD;
+        bt[SUB] = this.SUB;
         bt[MUL] = this.MUL;
 
         this.branchTable = bt;
@@ -89,6 +91,9 @@ class CPU {
         switch (op) {
             case 'ADD':
                 this.reg[regA] = (this.reg[regA] + this.reg[regB]) & 255;
+                break;
+            case 'SUB':
+                this.reg[regA] = (this.reg[regA] - this.reg[regB]) & 255;
                 break;
             case 'MUL':
                 this.reg[regA] = (this.reg[regA] * this.reg[regB]) & 255;
@@ -153,10 +158,14 @@ class CPU {
         this.alu('ADD', regA, regB);
     }
     
+    SUB(regA, regB) {
+        this.alu('SUB', regA, regB);
+    }
+    
     MUL(regA, regB) {
         this.alu('MUL', regA, regB);
     }
-    
+
 }
 
 module.exports = CPU;
