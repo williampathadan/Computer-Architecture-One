@@ -4,6 +4,10 @@
 
 const fs = require('fs');
 
+const IM = 0x05;
+const IS = 0x06;
+const SP = 0x07;
+
 // Instructions
 
 const HLT = 0b00000001;
@@ -30,6 +34,13 @@ const POP  = 0b01001100;
 
 const CALL = 0b01001000;
 const RET  = 0b00001001;
+
+const CMP = 0b10100000;
+
+// Flags
+const FL_EQ = 0;
+const FL_GT = 1;
+const FL_LT = 2;
 
 /**
  * Class for simulating a simple Computer (CPU & memory)
@@ -87,6 +98,8 @@ class CPU {
         bt[CALL] = this.CALL;
         bt[RET]  = this.RET;
 
+        bt[CMP] = this.CMP;
+
         this.branchTable = bt;
     }
 
@@ -114,6 +127,26 @@ class CPU {
     stopClock() {
         clearInterval(this.clock);
     }
+
+    /**
+     * Set Flags
+     */
+    setFlag(flag, value) {
+        value = +value;
+
+        if (value) {
+            this.reg.FL |= (1 << flag);
+        } else {
+            this.reg.FL &= (~(1 << flag));
+        }
+    }
+
+    getFlag(flag) {
+        // console.log((this.reg.FL & (1 << flag)) >> flag);
+        return (this.reg.FL & (1 << flag)) >> flag;
+    }
+
+
     /**
      * ALU functionality
      * 
@@ -155,6 +188,13 @@ class CPU {
                 break;
             case 'NOT':
                 this.reg[regA] = (~this.reg[regA]);
+                break;
+
+
+            case 'CMP':
+                this.setFlag(FL_EQ, this.reg[regA] === this.reg[regB]);
+                this.setFlag(FL_GT, this.reg[regA] > this.reg[regB]);
+                this.setFlag(FL_LT, this.reg[regA] < this.reg[regB]);
                 break;
         }
     }
@@ -286,10 +326,14 @@ class CPU {
         const addr = this.reg[reg];
         return addr;
     }
-    
+
     RET() {
         const value = this._pop();
         return value
+    }
+
+    CMP(regA, regB) {
+        this.alu('CMP', regA, regB);
     }
 
 }
