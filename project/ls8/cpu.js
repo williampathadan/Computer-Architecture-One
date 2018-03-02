@@ -25,6 +25,9 @@ const OR  = 0b10110001;
 const XOR = 0b10110010;
 const NOT = 0b01110000;
 
+const PUSH = 0b01001101;
+const POP  = 0b01001100;
+
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -74,6 +77,9 @@ class CPU {
         bt[OR]  = this.OR;
         bt[XOR] = this.XOR;
         bt[NOT] = this.NOT;
+
+        bt[PUSH] = this.PUSH;
+        bt[POP]  = this.POP;
 
         this.branchTable = bt;
     }
@@ -250,6 +256,23 @@ class CPU {
     
     NOT(reg) {
         this.alu('NOT', reg);
+    }
+    
+    _push(value) {
+        this.alu('DEC', SP);
+        this.ram.write(this.reg[SP], value);
+    }
+    PUSH(reg) {
+        this._push(this.reg[reg]);
+    }
+
+    _pop() {
+        const value = this.ram.read(this.reg[SP]);
+        this.alu('INC', SP);
+        return value;
+    }
+    POP(reg) {
+        this.reg[reg] = this._pop();
     }
 
 }
