@@ -12,8 +12,11 @@ const SP = 0x07;
 
 const HLT = 0b00000001;
 
+const LD  = 0b10011000;
 const LDI = 0b10011001;
 const PRN = 0b01000011;
+const ST  = 0b10011010;
+const NOP = 0b00000000;
 
 const ADD = 0b10101000;
 const SUB = 0b10101001;
@@ -81,8 +84,11 @@ class CPU {
 
         bt[HLT] = this.HLT;
         
+        bt[LD]  = this.LD;
         bt[LDI] = this.LDI;
         bt[PRN] = this.PRN;
+        bt[ST]  = this.ST;
+        bt[NOP] = this.NOP;
 
         bt[ADD] = this.ADD;
         bt[SUB] = this.SUB;
@@ -253,6 +259,10 @@ class CPU {
         this.stopClock();
     }
     
+    LD(regA, regB) {
+        this.reg[regA] = this.ram.read(this.reg[regB]);
+    }
+
     LDI(reg, value) {
         this.reg[reg] = value;
     }
@@ -262,6 +272,14 @@ class CPU {
         const value = this.reg[reg];
         // Print
         console.log(value);
+    }
+    
+    ST(regA, regB) {
+        this.ram.write(this.reg[regA], this.reg[regB]);
+    }
+    
+    NOP() {
+        
     }
     
     ADD(regA, regB) {
