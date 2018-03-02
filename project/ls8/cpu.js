@@ -17,6 +17,9 @@ const MUL = 0b10101010;
 const DIV = 0b10101011;
 const MOD = 0b10101100;
 
+const INC = 0b01111000;
+const DEC = 0b01111001;
+
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -58,6 +61,9 @@ class CPU {
         bt[MUL] = this.MUL;
         bt[DIV] = this.DIV;
         bt[MOD] = this.MOD;
+
+        bt[INC] = this.INC;
+        bt[DEC] = this.DEC;
 
         this.branchTable = bt;
     }
@@ -108,6 +114,13 @@ class CPU {
             case 'MOD':
                 this.reg[regA] = this.reg[regA] % this.reg[regB];
                 break;
+
+            case 'INC':
+                this.reg[regA] = (this.reg[regA] + 1) & 255;
+                break;
+            case 'DEC':
+                this.reg[regA] = (this.reg[regA] - 1) & 255;
+                break;
         }
     }
 
@@ -157,9 +170,9 @@ class CPU {
         this.reg[reg] = value;
     }
     
-    PRN(regA) {
+    PRN(reg) {
         // !!! IMPLEMENT ME
-        const value = this.reg[regA];
+        const value = this.reg[reg];
         // Print
         console.log(value);
     }
@@ -190,6 +203,14 @@ class CPU {
             this.HLT();
         }
         this.alu('MOD', regA, regB);
+    }
+
+    INC(reg) {
+        this.alu('INC', reg);
+    }
+    
+    DEC(reg) {
+        this.alu('DEC', reg);
     }
 
 }
