@@ -15,6 +15,7 @@ const ADD = 0b10101000;
 const SUB = 0b10101001;
 const MUL = 0b10101010;
 const DIV = 0b10101011;
+const MOD = 0b10101100;
 
 /**
  * Class for simulating a simple Computer (CPU & memory)
@@ -56,6 +57,7 @@ class CPU {
         bt[SUB] = this.SUB;
         bt[MUL] = this.MUL;
         bt[DIV] = this.DIV;
+        bt[MOD] = this.MOD;
 
         this.branchTable = bt;
     }
@@ -102,6 +104,9 @@ class CPU {
                 break;
             case 'DIV':
                 this.reg[regA] = this.reg[regA] / this.reg[regB];
+                break;            
+            case 'MOD':
+                this.reg[regA] = this.reg[regA] % this.reg[regB];
                 break;
         }
     }
@@ -177,6 +182,14 @@ class CPU {
             this.HLT();
         }
         this.alu('DIV', regA, regB);
+    }
+
+    MOD(regA, regB) {
+        if (this.reg[regB] === 0){
+            console.log('regB should not be zero');
+            this.HLT();
+        }
+        this.alu('MOD', regA, regB);
     }
 
 }
